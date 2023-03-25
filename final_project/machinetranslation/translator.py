@@ -19,20 +19,22 @@ language_translator.set_service_url(url)
 
 language_translator.set_disable_ssl_verification(True)
 
-def english_to_french(english_text):
-    if isinstance(english_text, str):
-        french_text = language_translator.translate(
-            text=english_text,
-            model_id='en-fr'
+ERROR_MSG = 'Error: Missing text to translate'
+
+def get_translation(translation_object):
+    return translation_object.get('translations')[0].get('translation')
+
+def tranlsate_text(text, model_id):
+    if isinstance(text, str):
+        text = language_translator.translate(
+            text=text,
+            model_id=model_id
             ).get_result()
-        return french_text['translations'][0]['translation']
-    return None
+        return get_translation(text)
+    return ERROR_MSG
+
+def english_to_french(english_text):
+    return tranlsate_text(english_text, 'en-fr')
 
 def french_to_english(french_text):
-    if isinstance(french_text, str):
-        english_text = language_translator.translate(
-            text=french_text,
-            model_id='fr-en'
-        ).get_result()
-        return english_text['translations'][0]['translation']
-    return None
+    return tranlsate_text(french_text, 'fr-en')
